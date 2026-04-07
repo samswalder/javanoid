@@ -7,7 +7,7 @@ class Paddle {
     this.height = 12;
     this.x = canvas.width / 2 - this.width / 2;
     this.y = canvas.height - 40;
-    this.speed = 7;
+    this.speed = 14;
     this.color = '#ecf0f1';
     this.keys = { left: false, right: false };
     this._bindEvents();
