@@ -14,12 +14,50 @@ class Game {
     this.levelIndex = 0;
     this.highScore = parseInt(localStorage.getItem('javanoidHS') || '0');
     this.speedModifier = 1.0;
+    this.userSpeedMultiplier = 1.0;
+    this.userPaddleSize = 100;
 
     this._bindGlobalKeys();
+    this._bindSidebar();
     this._loop();
   }
 
-  get baseSpeed() { return 4.5 + this.levelIndex * 0.2; }
+  get baseSpeed() { return (4.5 + this.levelIndex * 0.2) * this.userSpeedMultiplier; }
+
+  _bindSidebar() {
+    const speedSlider = document.getElementById('speedSlider');
+    const speedValue = document.getElementById('speedValue');
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeValue = document.getElementById('sizeValue');
+
+    speedSlider.addEventListener('input', () => {
+      this.userSpeedMultiplier = parseFloat(speedSlider.value);
+      speedValue.textContent = this.userSpeedMultiplier.toFixed(1) + '×';
+      // Apply immediately to live balls
+      if (this.balls) {
+        for (const ball of this.balls) {
+          ball.baseSpeed = this.baseSpeed;
+          ball.setSpeed(this.speedModifier);
+        }
+      }
+    });
+
+    sizeSlider.addEventListener('input', () => {
+      this.userPaddleSize = parseInt(sizeSlider.value);
+      sizeValue.textContent = this.userPaddleSize + 'px';
+      if (this.paddle) {
+        const centerX = this.paddle.centerX;
+        this.paddle.normalWidth = this.userPaddleSize;
+        this.paddle.wideWidth = Math.round(this.userPaddleSize * 1.6);
+        // Only update width if wide powerup isn't active
+        if (!this.powerupManager?.activeEffects?.['wide']) {
+          this.paddle.width = this.userPaddleSize;
+          this.paddle.x = centerX - this.paddle.width / 2;
+          this.paddle._clamp();
+        }
+      }
+    });
+  }
 
   _bindGlobalKeys() {
     window.addEventListener('keydown', e => {
@@ -65,6 +103,10 @@ class Game {
     this.speedModifier = 1.0;
     const level = LEVELS[this.levelIndex];
     this.paddle = new Paddle(this.canvas);
+    this.paddle.normalWidth = this.userPaddleSize;
+    this.paddle.wideWidth = Math.round(this.userPaddleSize * 1.6);
+    this.paddle.width = this.userPaddleSize;
+    this.paddle.x = this.canvas.width / 2 - this.userPaddleSize / 2;
     this.bricks = new BrickGrid(this.canvas, level);
     this.powerupManager = new PowerupManager(this.canvas, this);
     this.balls = [this._newBall()];

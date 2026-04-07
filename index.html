@@ -7,7 +7,24 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <canvas id="gameCanvas"></canvas>
+  <div id="wrapper">
+    <canvas id="gameCanvas"></canvas>
+    <aside id="sidebar">
+      <h2>Settings</h2>
+
+      <div class="control">
+        <label for="speedSlider">Ball Speed</label>
+        <input type="range" id="speedSlider" min="0.5" max="2.5" step="0.1" value="1.0">
+        <span class="value" id="speedValue">1.0×</span>
+      </div>
+
+      <div class="control">
+        <label for="sizeSlider">Paddle Size</label>
+        <input type="range" id="sizeSlider" min="40" max="220" step="10" value="100">
+        <span class="value" id="sizeValue">100px</span>
+      </div>
+    </aside>
+  </div>
 
   <script src="levels.js"></script>
   <script src="paddle.js"></script>
