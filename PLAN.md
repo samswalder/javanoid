@@ -52,7 +52,7 @@ Triggered as soon as scroll velocity drops to zero and no new scroll input occur
 - A "ding" fires when cumulative session points cross each next 1000-point threshold.
 - **Rate-limited by a minimum interval that grows parabolically over the session, without a ceiling:**
   - `minInterval(n) = 30 + k · n²` seconds, where `n` = dings earned this session.
-  - `k` tuned so `n ≈ 35` yields ≈ 300 s (5 min). Beyond that, it keeps climbing — scrolling gets harder forever.
+  - `k` tuned so `n ≈ 75` yields ≈ 300 s (5 min). A gentle ramp — it takes a lot of dings before intervals really stretch out. Beyond that, it keeps climbing forever.
 - If a 1000-point threshold is crossed before the min interval elapses, the ding is deferred until the interval expires.
 - Each ding plays `ding.wav` and triggers a light haptic tap.
 
@@ -166,7 +166,7 @@ Scroll/
 | Countdown on idle | 6.0 s | |
 | Red-alert threshold | 3.0 s remaining | |
 | Ding base interval | 30 s | |
-| Ding parabolic k | ~0.22 | so n=35 → 300 s |
+| Ding parabolic k | ~0.05 | so n=75 → 300 s (slow ramp) |
 | Hue cycle | 86,400 s active scroll | 24 h |
 | Grain amplitude | 0.04 | barely visible |
 | Baseline saturation / brightness | 0.45 / 0.85 | |
